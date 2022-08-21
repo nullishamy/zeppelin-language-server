@@ -1,0 +1,10 @@
+README.md
+.github/
+.vscode/
+.prettierrc.json
+
+tsconfig.json
+server/tsconfig.json
+
+*.ts
+

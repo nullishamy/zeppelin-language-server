@@ -1,5 +1,5 @@
 import { Position, TextDocument } from 'vscode-languageserver-textdocument';
-import { buildDocs } from './completion';
+import { buildFunctionDocs } from './completion';
 import { functions } from './functions';
 import { app } from './server';
 
@@ -15,20 +15,19 @@ export function init() {
 		const word = getWordAround(document, data.position)
 		const fn = functions.find(f => f.name == word)
 
-		if (!fn) {
-			// Fail silently, the hover wasnt valid
-			return;
+		if (fn) {
+			return {
+				contents: buildFunctionDocs(fn),
+			};
 		}
 
-		return {
-			contents: buildDocs(fn),
-		};
+		// Fail silently, the hover wasnt valid
 	});
 }
 
 const STOP_CHARS = new Set(['(', ')', '{', '}', ' ', ',']);
 
-function getWordAround(document: TextDocument, position: Position): string {
+export function getWordAround(document: TextDocument, position: Position): string {
 	const line = document.getText({
 		start: { line: position.line, character: 0 },
 		end: { line: position.line, character: Number.MAX_VALUE },
@@ -47,5 +46,5 @@ function getWordAround(document: TextDocument, position: Position): string {
 
 
 	// +1 for exlusive bounds
-	return line.substring(backPos, frontPos + 1)
+	return line.substring(backPos, frontPos + 1).replace('\n', '')
 }

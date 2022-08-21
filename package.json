@@ -1,56 +1,30 @@
 {
-	"name": "lsp-sample",
-	"description": "A language server example",
-	"author": "Microsoft Corporation",
-	"license": "MIT",
-	"version": "1.0.0",
+	"name": "zeppelin-language-server",
+	"description": "A language server for Zeppelin Tags",
+	"author": "nullishamy",
+	"license": "OSL3",
+	"version": "1.0.7",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-extension-samples"
+		"url": "https://github.com/nullishamy/zeppelin-language-server"
 	},
-	"publisher": "vscode-samples",
+	"files": [
+		"server/"
+	],
+        "bin": {
+		"zeppelin-language-server": "./server/out/server.js"
+	},
+	"publisher": "nullishamy",
 	"categories": [],
 	"keywords": [
-		"multi-root ready"
 	],
 	"engines": {
-		"vscode": "^1.63.0"
-	},
-	"activationEvents": [
-		"onLanguage:plaintext"
-	],
-	"main": "./client/out/extension",
-	"contributes": {
-		"configuration": {
-			"type": "object",
-			"title": "Example configuration",
-			"properties": {
-				"languageServerExample.maxNumberOfProblems": {
-					"scope": "resource",
-					"type": "number",
-					"default": 100,
-					"description": "Controls the maximum number of problems produced by the server."
-				},
-				"languageServerExample.trace.server": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"off",
-						"messages",
-						"verbose"
-					],
-					"default": "off",
-					"description": "Traces the communication between VS Code and the language server."
-				}
-			}
-		}
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
+		"prepack": "npm run compile",
 		"compile": "tsc -b",
 		"watch": "tsc -b -w",
 		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
-		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
 		"test": "sh ./scripts/e2e.sh"
 	},
 	"devDependencies": {

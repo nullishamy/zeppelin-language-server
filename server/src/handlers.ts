@@ -28,6 +28,7 @@ export function init() {
 				// Tell the client that this server supports code completion.
 				completionProvider: {
 					resolveProvider: true,
+					triggerCharacters: [ '.' ]
 				},
 
 				hoverProvider: true,
