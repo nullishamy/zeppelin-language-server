@@ -11,15 +11,13 @@
 	"files": [
 		"server/"
 	],
-        "bin": {
+	"bin": {
 		"zeppelin-language-server": "./server/out/server.js"
 	},
 	"publisher": "nullishamy",
 	"categories": [],
-	"keywords": [
-	],
-	"engines": {
-	},
+	"keywords": [],
+	"engines": {},
 	"scripts": {
 		"prepack": "npm run compile",
 		"compile": "tsc -b",

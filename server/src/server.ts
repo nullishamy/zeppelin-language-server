@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
-import {
-    CompletionItem, Connection, createConnection, ProposedFeatures, TextDocuments
-} from 'vscode-languageserver/node';
+import { Connection, createConnection, ProposedFeatures, TextDocuments } from 'vscode-languageserver/node';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
-import { init as handlerInit } from './handlers'
-import { init as completionInit } from './completion'
-import { init as textInit } from './text'
-import { init as hoverInit } from './hover'
+import Parser from 'tree-sitter';
+import ZeppelinTag from 'tree-sitter-zeppelin';
+
+import { init as completionInit } from './completion';
+import { init as handlerInit } from './handlers';
+import { init as hoverInit } from './hover';
+import { init as textInit } from './text';
 
 // The settings shape
 interface Settings {
@@ -28,6 +29,7 @@ interface State {
 	clientCapabilities: ClientCapabilities;
 	connection: Connection;
 	documents: TextDocuments<TextDocument>;
+	parser: Parser;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -42,6 +44,11 @@ export const app: State = {
 	},
 	connection: createConnection(ProposedFeatures.all),
 	documents: new TextDocuments(TextDocument),
+	parser: (() => {
+	    const parser = new Parser()
+	    parser.setLanguage(ZeppelinTag)
+	    return parser
+	})()
 };
 
 // Initialise modules
