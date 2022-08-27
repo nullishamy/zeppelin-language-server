@@ -3,6 +3,7 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 import { app } from './server';
 import { functions } from './functions';
 import { notEqual } from 'assert';
+import { values } from './values';
 
 export function init() {
 	// The content of a text document has changed. This event is emitted
@@ -79,6 +80,24 @@ async function handleTextDocumentChange(textDocument: TextDocument): Promise<voi
 		})
 
 	diagnostics.push(...notFound)
+
+	const notFoundValues = ast.rootNode.descendantsOfType([ 'property' ])
+		.filter(f => values.find(f2 => f2.key == f.namedChild(0)?.text) === undefined)
+		.map(f => {
+			const start = f.startPosition
+			const end = f.endPosition
+
+			return {
+				range: Range.create(
+					Position.create(start.row, start.column), 
+					Position.create(end.row, end.column)
+				),
+				message: `Could not find value ${f.namedChild(0)?.text}`,
+				severity: DiagnosticSeverity.Error
+			}
+		})
+
+	diagnostics.push(...notFoundValues)
 
 	diagnostics.push({
 		range: Range.create(Position.create(0, 0), Position.create(0, 0)),

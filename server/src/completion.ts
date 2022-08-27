@@ -13,7 +13,7 @@ const VALUES = values
 		// key will be a legible value because we're only getting roots
 		return {
 			label: f.key,
-			kind: CompletionItemKind.Value,
+			kind: CompletionItemKind.Constant,
 			data: f.key,
 		};
 	});
