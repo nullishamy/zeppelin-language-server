@@ -4,7 +4,7 @@ export interface TagValue {
 	kind: 'root' | 'child';
 }
 
-export const values: TagValue[] = [
+export const VALUES: TagValue[] = [
 	{ key: 'user', type: 'object', kind: 'root' },
 	{ key: 'user.username', type: 'string', kind: 'child' },
 	{ key: 'user.id', type: 'string', kind: 'child' },

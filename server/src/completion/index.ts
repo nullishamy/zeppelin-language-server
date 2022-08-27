@@ -3,29 +3,28 @@ import {
 	CompletionItemKind,
 	TextDocumentPositionParams,
 } from 'vscode-languageserver';
-import { functions, TagFunction } from './functions';
-import { app } from './server';
-import { TagValue, values } from './values';
+import { FUNCTIONS, TagFunction } from '../const/functions';
+import { TagValue, VALUES } from '../const/values';
+import { app } from '../server';
 
-const VALUES = values
-	.filter((v) => v.kind === 'root')
-	.map((f) => {
-		// key will be a legible value because we're only getting roots
-		return {
-			label: f.key,
-			kind: CompletionItemKind.Constant,
-			data: f.key,
-		};
-	});
+const GLOBAL_VALUES = VALUES.filter((v) => v.kind === 'root').map((f) => {
+	// key will be a legible value because we're only getting roots
+	return {
+		label: f.key,
+		kind: CompletionItemKind.Constant,
+		data: f.key,
+	};
+});
 
-const FUNCTIONS = functions.map((f) => {
+const GLOBAL_FUNCTIONS = FUNCTIONS.map((f) => {
 	return {
 		label: f.name,
 		kind: CompletionItemKind.Function,
 		data: f.name,
 	};
 });
-const GLOBALS = [...VALUES, ...FUNCTIONS];
+
+const GLOBALS = [...GLOBAL_VALUES, ...GLOBAL_FUNCTIONS];
 
 export function init() {
 	// This handler provides the initial list of the completion items.
@@ -56,31 +55,33 @@ export function init() {
 		}
 
 		if (parent.type === 'fn') {
-			return FUNCTIONS;
+			return GLOBAL_FUNCTIONS;
 		}
 
 		if (parent.type === 'property') {
 			// We're completing a property, find the base to provide more accurate completion
-			const base = parent.namedChild(0)
-		
+			const base = parent.namedChild(0);
+
 			if (!base) {
 				// Base was malformed, fallback to global values
-				return VALUES
+				return GLOBAL_VALUES;
 			}
 
-			const baseName = base.text
-			
-			const baseProps = values.filter(v => v.kind === 'child' && v.key.startsWith(baseName))
+			const baseName = base.text;
+
+			const baseProps = VALUES.filter(
+				(v) => v.kind === 'child' && v.key.startsWith(baseName)
+			);
 
 			if (baseProps.length === 0) {
 				// Base was not recognised, fallback to global values
-				return VALUES
+				return GLOBAL_VALUES;
 			}
 
-			return baseProps.map(v => ({
+			return baseProps.map((v) => ({
 				label: v.key,
 				kind: CompletionItemKind.Property,
-				data: v.key
+				data: v.key,
 			}));
 		}
 
@@ -90,12 +91,12 @@ export function init() {
 	// This handler resolves additional information for the item selected in
 	// the completion list.
 	app.connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
-		const fn = functions.find((f) => f.name === item.data);
+		const fn = FUNCTIONS.find((f) => f.name === item.data);
 		if (fn) {
 			item.documentation = buildFunctionDocs(fn);
 		}
 
-		const value = values.find(v => v.key === item.data)
+		const value = VALUES.find((v) => v.key === item.data);
 		if (value) {
 			item.documentation = buildValueDocs(value);
 		}

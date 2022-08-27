@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 
-import { Connection, createConnection, ProposedFeatures, TextDocuments } from 'vscode-languageserver/node';
+import {
+	Connection,
+	createConnection,
+	ProposedFeatures,
+	TextDocuments,
+} from 'vscode-languageserver/node';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
@@ -8,9 +13,7 @@ import Parser from 'tree-sitter';
 import ZeppelinTag from 'tree-sitter-zeppelin';
 
 import { init as completionInit } from './completion';
-import { init as handlerInit } from './handlers';
-import { init as hoverInit } from './hover';
-import { init as textInit } from './text';
+import { init as eventInit } from './event';
 
 // The settings shape
 interface Settings {
@@ -24,11 +27,13 @@ interface ClientCapabilities {
 }
 
 // The server state
-interface State {
+interface App {
 	settings: Settings;
 	clientCapabilities: ClientCapabilities;
 	connection: Connection;
 	documents: TextDocuments<TextDocument>;
+	// URI => AST
+	trees: Map<string, Parser.Tree>;
 	parser: Parser;
 }
 
@@ -36,7 +41,7 @@ export const DEFAULT_SETTINGS: Settings = {
 	maxNumberOfProblems: 1000,
 };
 
-export const app: State = {
+export const app: App = {
 	settings: DEFAULT_SETTINGS,
 	clientCapabilities: {
 		hasConfigurationCapability: false,
@@ -44,18 +49,17 @@ export const app: State = {
 	},
 	connection: createConnection(ProposedFeatures.all),
 	documents: new TextDocuments(TextDocument),
+	trees: new Map(),
 	parser: (() => {
-	    const parser = new Parser()
-	    parser.setLanguage(ZeppelinTag)
-	    return parser
-	})()
+		const parser = new Parser();
+		parser.setLanguage(ZeppelinTag);
+		return parser;
+	})(),
 };
 
 // Initialise modules
-handlerInit()
-textInit()
-completionInit()
-hoverInit()
+eventInit();
+completionInit();
 
 // Make the text document manager listen on the connection
 // for open, change and close text document events
