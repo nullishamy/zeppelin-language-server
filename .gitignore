@@ -2,12 +2,7 @@
 npm-debug.log
 Thumbs.db
 /node_modules/
-server/node_modules/
-server/out/
-server/.vs/
-client/node_modules/
-client/out/
-client/.vs/
+out/
 tsconfig.lsif.json
 *.lsif
 *.db
