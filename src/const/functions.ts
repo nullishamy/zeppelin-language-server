@@ -1,4 +1,4 @@
-export interface TagFunction {
+1export interface TagFunction {
 	name: string;
 	description: string;
 	arguments: string[];
@@ -183,5 +183,12 @@ export const FUNCTIONS: TagFunction[] = [
 		returnValue: 'void',
 		arguments: ['varname', 'value'],
 		examples: ['set("test", "value")']
+	},	
+        {
+		name: 'setr',
+		description: 'Sets and return the variable',
+		returnValue: 'void',
+		arguments: ['varname', 'value'],
+		examples: ['setr("test", "value")']
 	}
 ];
