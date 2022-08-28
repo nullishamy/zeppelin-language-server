@@ -5,7 +5,7 @@ import { nodeForPosition, treeForUri } from '../util';
 export function onDefinition(data: DefinitionParams): Definition | undefined {
 	const uri = data.textDocument.uri;
 	const ast = treeForUri(uri);
-	const node = nodeForPosition(ast, data.position)
+	const node = nodeForPosition(ast, data.position);
 
 	// We only support goto def for strings (variable names)
 	// if called on anything else, abort
@@ -35,15 +35,16 @@ export function onDefinition(data: DefinitionParams): Definition | undefined {
 		// Setr calls come in the form `setr(varname, varvalue)` to the first arg is always the name
 		// which we are filtering for
 		.filter((f) => f.namedChild(1)?.child(1)?.text === varname);
-        const allNodes = (setNodes.length > 0 ? setNodes : setrNodes)
+	const allNodes = setNodes.length > 0 ? setNodes : setrNodes;
 
-        if(allNodes.length === 0) {
+	if (allNodes.length === 0) {
 		// TODO: diagnostic for `get` calls with no `set` or `setr` call
 		// TODO: improve this with per-document var maps?
 		// No definition found, return
 		return;
+	}
 
-        if(allNodes.length === 1) {
+	if (allNodes.length === 1) {
 		const node = allNodes[0];
 		return {
 			uri,
