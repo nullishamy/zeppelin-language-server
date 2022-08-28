@@ -26,11 +26,13 @@ export const VALUES: TagValue[] = [
 
 	{ key: 'member.joinedAt', type: 'number', kind: 'child' },
 
+	{ key: 'args', type: 'object', kind: 'root' },
+
 	// Args can have more values than this, though anything more is
 	// uncommon so it's not worth generating for
 	...Array.from({ length: 15 }).map((_, i) => ({
 		key: `args.${i}`,
 		type: 'string',
-		kind: 'child'
+		kind: 'child',
 	} as const)),
 ];
