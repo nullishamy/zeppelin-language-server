@@ -2,6 +2,8 @@ import { RenameParams, WorkspaceEdit } from 'vscode-languageserver';
 import { app } from '../server';
 import { nodeForPosition, pointToRange, treeForUri } from '../util';
 
+const FUNCTIONS = ['set', 'setr', 'get'];
+
 export function onRenameRequest(data: RenameParams): WorkspaceEdit | undefined {
 	const uri = data.textDocument.uri;
 	const ast = treeForUri(uri);
@@ -16,11 +18,11 @@ export function onRenameRequest(data: RenameParams): WorkspaceEdit | undefined {
 	const oldName = node.text;
 	const newName = data.newName;
 
-	// Find all usages, either through `get` or `set` calls.
+	// Find all usages, either through `get`, `set` or `setr` calls.
 	// The first argument of each is the old name we want to replace
 	const usages = ast.rootNode
 		.descendantsOfType(['fn'])
-		.filter((f) => f.namedChild(0)?.text === 'set' || f.namedChild(0)?.text === 'get')
+		.filter((f) => FUNCTIONS.includes(f.namedChild(0)?.text!))
 		.filter((f) => f.namedChild(1)?.child(1)?.text === oldName)
 		.map((f) => f.namedChild(1)!.child(1)!);
 
