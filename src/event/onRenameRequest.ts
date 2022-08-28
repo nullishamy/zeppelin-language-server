@@ -2,7 +2,7 @@ import { RenameParams, WorkspaceEdit } from 'vscode-languageserver';
 import { app } from '../server';
 import { nodeForPosition, pointToRange, treeForUri } from '../util';
 
-const FUNCTIONS = ['set', 'setr'];
+const FUNCTIONS = ['set', 'setr', 'get'];
 
 export function onRenameRequest(data: RenameParams): WorkspaceEdit | undefined {
 	const uri = data.textDocument.uri;
