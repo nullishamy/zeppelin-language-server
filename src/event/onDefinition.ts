@@ -2,6 +2,8 @@ import { Definition, DefinitionParams, Position, Range } from 'vscode-languagese
 import { app } from '../server';
 import { nodeForPosition, treeForUri } from '../util';
 
+const FUNCTIONS = ['set', 'setr'];
+
 export function onDefinition(data: DefinitionParams): Definition | undefined {
 	const uri = data.textDocument.uri;
 	const ast = treeForUri(uri);
@@ -15,13 +17,11 @@ export function onDefinition(data: DefinitionParams): Definition | undefined {
 
 	const varname = node.text;
 
-	const setFunctions = ['set', 'setr'];
-
 	// With the varname, search the tree for a corresponding `set` statment
 	const nodes = ast.rootNode
 		.descendantsOfType(['fn'])
 		// All `set` and `setr` calls
-		.filter((f) => setFunctions.includes(f.namedChild(0)?.text!))
+		.filter((f) => FUNCTIONS.includes(f.namedChild(0)?.text!))
 		// Second child call to `1` to skip open_paren of the args list
 
 		// The calls come in the form `set(varname, varvalue)` so the first arg is always the name
