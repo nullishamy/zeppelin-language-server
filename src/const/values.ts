@@ -33,6 +33,6 @@ export const VALUES: TagValue[] = [
 	...Array.from({ length: 15 }).map((_, i) => ({
 		key: `args.${i}`,
 		type: 'string',
-		kind: 'child',
+		kind: 'child'
 	} as const)),
 ];
