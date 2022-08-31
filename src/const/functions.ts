@@ -10,8 +10,7 @@ export interface TagFunction {
 export const FUNCTIONS: TagFunction[] = [
 	{
 		name: 'if',
-		description:
-			'Checks if a condition is true or false and returns the corresponding ifTrue or ifFalse',
+		description: 'Checks if a condition is true or false and returns the corresponding ifTrue or ifFalse',
 		returnValue: 'boolean',
 		arguments: ['condition', 'ifTrue', 'ifFalse'],
 		examples: ['if(user.bot, "User is a bot", "User is not a bot")'],
@@ -190,5 +189,12 @@ export const FUNCTIONS: TagFunction[] = [
 		returnValue: 'void',
 		arguments: ['varname', 'value'],
 		examples: ['setr("test", "value")'],
+	},
+	{
+		name: 'tag',
+		description: 'Gets a tag',
+		returnValue: 'any',
+		arguments: ['tag', 'argument1', 'argument2', '...'],
+		examples: ['tag("Hello", "World")']
 	},
 ];

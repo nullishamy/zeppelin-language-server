@@ -4,25 +4,31 @@ export interface TagValue {
 	kind: 'root' | 'child';
 }
 
+const USER_PROPERTIES = [
+	'user.username',
+	'user.id',
+	'user.discriminator',
+	'user.bot',
+	'user.system',
+	'user.publicFlags'
+]
+
 export const VALUES: TagValue[] = [
 	{ key: 'user', type: 'object', kind: 'root' },
-	{ key: 'user.username', type: 'string', kind: 'child' },
-	{ key: 'user.id', type: 'string', kind: 'child' },
-	{ key: 'user.discriminator', type: 'number', kind: 'child' },
-	{ key: 'user.bot', type: 'boolean', kind: 'child' },
-	{ key: 'user.system', type: 'boolean', kind: 'child' },
-	{ key: 'user.publicFlags', type: 'number', kind: 'child' },
+
+	...Array.from(USER_PROPERTIES).map(prop => ({
+		key: prop,
+		type: 'string',
+		kind: 'child'
+	}) as const),
 
 	{ key: 'member', type: 'object', kind: 'root' },
 
-	// FIXME: dynamic generation
-	{ key: 'member.user', type: 'user', kind: 'child' },
-	{ key: 'member.user.username', type: 'string', kind: 'child' },
-	{ key: 'member.user.id', type: 'string', kind: 'child' },
-	{ key: 'member.user.discriminator', type: 'number', kind: 'child' },
-	{ key: 'member.user.bot', type: 'boolean', kind: 'child' },
-	{ key: 'member.user.system', type: 'boolean', kind: 'child' },
-	{ key: 'member.user.publicFlags', type: 'number', kind: 'child' },
+	...Array.from(USER_PROPERTIES).map(prop => ({
+		key: `member.${prop}`,
+		type: 'string',
+		kind: 'child'
+	}) as const),
 
 	{ key: 'member.joinedAt', type: 'number', kind: 'child' },
 
