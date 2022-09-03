@@ -5,28 +5,28 @@ export interface TagValue {
 }
 
 const USER_PROPERTIES = [
-	'user.username',
-	'user.id',
-	'user.discriminator',
-	'user.bot',
-	'user.system',
-	'user.publicFlags'
+	{key: 'user.username', type: 'string'},
+	{key: 'user.id', type: 'number'},
+	{key: 'user.discriminator', type: 'number'},
+	{key: 'user.bot', type: 'boolean'},
+	{key: 'user.system', type: 'boolean'},
+	{key: 'user.publicFlags', type: 'number'}
 ]
 
 export const VALUES: TagValue[] = [
 	{ key: 'user', type: 'object', kind: 'root' },
 
 	...Array.from(USER_PROPERTIES).map(prop => ({
-		key: prop,
-		type: 'string',
+		key: prop.key,
+		type: prop.type,
 		kind: 'child'
 	}) as const),
 
 	{ key: 'member', type: 'object', kind: 'root' },
 
 	...Array.from(USER_PROPERTIES).map(prop => ({
-		key: `member.${prop}`,
-		type: 'string',
+		key: `member.${prop.key}`,
+		type: prop.type,
 		kind: 'child'
 	}) as const),
 
